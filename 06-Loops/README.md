@@ -31,9 +31,6 @@ IF lv_reserved = abap_false.
 ENDIF.
 ```
 
-> 🧠 **Retry pattern notes.** Always bound the number of attempts (`lc_max_attempts`), always `EXIT` on success, and always handle the "all attempts failed" case explicitly. `sy-index` holds the current iteration number inside `DO`, which is useful for logging the attempt count.
-
-> ⚠️ **Do not use a retry loop to write directly to SAP standard application tables.** Directly updating SAP standard application tables with `UPDATE` / `MODIFY` / `DELETE` bypasses the application's business logic, validations and status handling, and should not be presented as a normal extension technique. Prefer the supported API or business interface appropriate to the target object — see [15-BAPIs](../15-BAPIs/README.md). Direct DML in this guide is always shown against **custom (Z) tables** you own.
 
 ## 🔁 LOOP AT — the Workhorse
 
@@ -52,7 +49,7 @@ LOOP AT lt_data REFERENCE INTO DATA(lr_data) FROM 1 TO ls_attribute-size.
 ENDLOOP.
 ```
 
-> ✅ **Tip:** Prefer `ASSIGNING FIELD-SYMBOL(<fs>)` or `REFERENCE INTO` over `INTO ls_data` when you plan to **modify** the current row — it avoids an extra `MODIFY` statement and is more performant since no copy is made.
+
 
 ### Control Breaks (`AT NEW` / `AT END OF`)
 
@@ -77,13 +74,7 @@ LOOP AT lt_orders INTO DATA(ls_order).
 ENDLOOP.
 ```
 
-> ⚠️ **Two prerequisites that are easy to miss.**
-> 1. The table must be **sorted by the control field** (and by every field to its left in the structure). `AT NEW f` triggers whenever `f` *or any field before it* changes — on an unsorted table you get spurious breaks.
-> 2. **Do not combine `AT` with a restricting `WHERE` condition** on the same `LOOP`. The ABAP documentation states that no restricting condition should be specified, because rows filtered out by `WHERE` can suppress the group break entirely and produce unexpected results (the extended syntax check flags this). Filter the table *before* the loop instead.
->
-> Note that `ASSIGNING` / `REFERENCE INTO` **are** permitted with `AT`; the documented caveat is only that the referenced row is not modified when entering and leaving the `AT`-`ENDAT` structure.
 
-> 💡 **Modern alternative:** `LOOP ... GROUP BY` (next section) replaces most control-break code and does not depend on the table being pre-sorted. Both remain in use — control breaks are `CLASSIC BUT STILL RELEVANT` and you will meet them constantly in existing reports; `GROUP BY` is the `CURRENT / RECOMMENDED` choice for new code.
 
 ## 🧮 LOOP ... GROUP BY
 
@@ -148,9 +139,6 @@ ls_data-container_type_txt = concat_lines_of( table = lt_parts
                                               sep   = `, ` ).
 ```
 
-> 💡 `GROUP SIZE` (second example) directly returns the number of members in each group — no manual counting loop needed. Prefer it over the manual `TRANSPORTING NO FIELDS` counting pattern.
->
-> **VERSION-DEPENDENT:** `LOOP ... GROUP BY` and `GROUP SIZE` were introduced in the ABAP 7.40 generation. Confirm the exact minimum release/SP for your target system in the ABAP Keyword Documentation before relying on them.
 
 ## ➕ COLLECT — Aggregating Rows
 
@@ -194,8 +182,7 @@ LOOP AT it_lips INTO DATA(ls_lips).
 ENDLOOP.
 ```
 
-> ⚠️ **How `COLLECT` decides.** The key is formed from **all character-like (non-numeric) components**; only genuinely numeric components (`i`, `p`, `f`, `decfloat`) are added up. A `TYPE n` component looks numeric but is character-like, so it becomes part of the key rather than being summed — a frequent surprise. All key components must match **exactly** (a trailing space creates a new row).
->
+
 > `COLLECT` is intended for standard tables with a default key, and for sorted/hashed tables with a **unique** key. Check the table's key definition before using it. **NEEDS OFFICIAL VERIFICATION** for the precise list of permitted table categories in your target release — see the ABAP Keyword Documentation for `COLLECT`.
 
 ## 🎯 Range Tables (`RANGES` / `SELECT-OPTIONS`)
@@ -244,7 +231,6 @@ SELECT 'I'   AS sign,
   INTO CORRESPONDING FIELDS OF TABLE @lr_aufnr.
 ```
 
-> ⚠️ **VERSION-DEPENDENT.** Literals in the SELECT list and internal tables as ABAP SQL data sources were introduced progressively across the 7.4x/7.5x releases. Check the ABAP Keyword Documentation for your target release before relying on them. `INTO CORRESPONDING FIELDS OF TABLE` is used here because the range structure has a `high` component that the SELECT list does not supply.
 
 Use the resulting range table in a `WHERE` clause:
 
@@ -255,27 +241,3 @@ SELECT matnr, mtart, meins
   INTO TABLE @DATA(lt_mara).
 ```
 
-## ✅ Best Practices
-
-- Always `SORT` + `DELETE ADJACENT DUPLICATES` a range table built via `FOR`/loop before using it in a `WHERE ... IN`, especially for large tables — duplicate ranges hurt SQL performance.
-- Prefer `LOOP ... GROUP BY ... GROUP SIZE` over manual counting loops for readability and (usually) performance.
-- Use `ASSIGNING`/`REFERENCE INTO` in loops that modify data; use `INTO` (a copy) only when you need a safe, independent copy.
-
-## ⚠️ Common Mistakes
-
-- Modifying the loop's work area when using `LOOP ... INTO` (a copy) and expecting the source table to change — it won't; you need `MODIFY` or `ASSIGNING`.
-- Building range tables without `SIGN`/`OPTION`. This does **not** raise a runtime error — the row is simply not interpreted as you intended, so the filter silently returns the wrong rows. Always set both.
-- Combining `AT ... ENDAT` with a `WHERE` condition on the same `LOOP`, or forgetting to `SORT` by the control field first.
-- Forgetting that `COLLECT` treats every character-like component (including `TYPE n`) as part of the key — a tiny difference (e.g., a trailing space) creates a new row instead of aggregating.
-
-## 🎤 Interview Tips
-
-- Explain the difference between `LOOP ... INTO`, `LOOP ... ASSIGNING`, and `LOOP ... REFERENCE INTO`.
-- Be ready to explain how `COLLECT` decides whether to sum or append a new row (key fields vs. numeric fields).
-- Know the structure of a range table (`sign`, `option`, `low`, `high`) and common `option` values (`EQ`, `BT`, `CP`, `NE`).
-
-## 🔗 Related Chapters
-
-- [07-Internal-Tables](../07-Internal-Tables/README.md)
-- [08-Open-SQL](../08-Open-SQL/README.md) — using range tables in `WHERE ... IN`
-- [19-Performance](../19-Performance/README.md)
