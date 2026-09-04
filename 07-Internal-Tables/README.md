@@ -55,7 +55,6 @@ TYPES tt_charg TYPE STANDARD TABLE OF ty_charg
                WITH NON-UNIQUE SORTED KEY matnr_lgort COMPONENTS matnr lgort.
 ```
 
-> 💡 A **secondary sorted/hashed key** (`WITH ... SORTED KEY name COMPONENTS ...`) lets you do fast `READ TABLE ... WITH KEY matnr_lgort COMPONENTS ...` lookups without re-sorting the primary table — critical for performance on large tables (see [19-Performance](../19-Performance/README.md)).
 
 ## ➕ Filling Tables — APPEND, INSERT, VALUE
 
@@ -204,11 +203,7 @@ lt_wanted_users = VALUE #( ( 'USER01' ) ( 'USER02' ) ).
 DATA(lt_by_table) = FILTER #( it_itab IN lt_wanted_users WHERE ernam = table_line ).
 ```
 
-> ⚠️ **Two things to get right.**
-> 1. **`IN` takes an internal table, not a type name.** `FILTER #( it_itab IN tt_row ... )` would be wrong — `tt_row` is a *type*. The filter table must be a real data object.
-> 2. **The two variants have different `WHERE` forms.** The basic variant compares against a value (`WHERE ernam = 'USER01'`); the filter-table variant compares against a component of the filter table (`WHERE ernam = table_line`). You cannot mix them.
->
-> `#` for the result type is fine in an inline declaration here — it is derived from the source table.
+
 
 ## Σ Calculations with REDUCE
 
@@ -379,37 +374,3 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-> 💡 **`UNASSIGN` is rarely necessary.** A field symbol becomes invalid when it goes out of scope. Use `UNASSIGN` when you deliberately want a later `IS ASSIGNED` check to be false — for example when reusing one field symbol across several passes. ABAP field symbols are not C pointers: you cannot end up dereferencing freed memory. The real risk is a *stale* assignment — a field symbol still pointing at a row of a table you have since modified.
-
-## ✅ Best Practices
-
-- Add a **secondary sorted/hashed key** to large internal tables that are read frequently by non-primary-key fields.
-- Prefer `FIELD-SYMBOLS`/`REFERENCE INTO` over `INTO` (copy) when looping over large tables or when modifying rows in place — avoids unnecessary data copies.
-- Use `VALUE`, `FILTER`, `FOR`, and `REDUCE` to replace multi-line procedural loops with single, declarative expressions where it improves readability.
-- Give `REDUCE` a result type wide enough for what it accumulates.
-- Always check `sy-subrc` after `ASSIGN` and after `ASSIGN COMPONENT`.
-
-## ⚠️ Common Mistakes
-
-- **Expecting a table expression to set `sy-subrc`. It does not.** `lt_itab[ key ]` raises `CX_SY_ITAB_LINE_NOT_FOUND` when there is no match. Use one of:
-  - `line_exists( lt_itab[ key = ... ] )` before accessing;
-  - `VALUE #( lt_itab[ key = ... ] OPTIONAL )` for an initial value, or `DEFAULT ...` for a fallback;
-  - `TRY ... CATCH cx_sy_itab_line_not_found`;
-  - `ASSIGN lt_itab[ key = ... ] TO <fs>` — **the one construct where a table expression sets `sy-subrc`** instead of raising.
-- Reducing a packed/quantity field into an integer result and losing the decimals.
-- Using `ASSIGN COMPONENT ... OF STRUCTURE` with a hardcoded field name against a generic structure without checking `sy-subrc`.
-- Confusing `-` (structure component) with `->` (dereferencing an object or data reference).
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between a **field symbol** and a **data reference**, and when each is appropriate.
-- Explain what happens when a table expression finds no row — and name the one statement where `sy-subrc` is set instead.
-- Be ready to explain what `FILTER`, `REDUCE`, and `FOR` do, and how they compare to writing an equivalent `LOOP`.
-- Explain the prerequisite `FILTER` places on the source table.
-- Know why `COLLECT` and secondary keys matter for internal table performance (see [19-Performance](../19-Performance/README.md)).
-
-## 🔗 Related Chapters
-
-- [06-Loops](../06-Loops/README.md)
-- [08-Open-SQL](../08-Open-SQL/README.md)
-- [19-Performance](../19-Performance/README.md)
