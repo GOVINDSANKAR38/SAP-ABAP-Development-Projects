@@ -2,7 +2,7 @@
 
 ## 📖 Introduction
 
-Modularization means splitting logic into reusable, testable units. ABAP offers several mechanisms: **function modules** (RFC-callable, package-based), **`FORM`/`PERFORM`** (classical subroutines, see [03-Variables](../03-Variables/README.md#-form--perform-classical-subroutines)), **macros** (`DEFINE`/`END-OF-DEFINITION`, textual/preprocessor-like), and — the modern, recommended approach — **classes and methods** (see [10-Objects](../10-Objects/README.md)).
+Modularization means splitting logic into reusable, testable units. ABAP offers several mechanisms: **function modules** (RFC-callable, package-based), **`FORM`/`PERFORM`** (classical subroutines, , **macros** (`DEFINE`/`END-OF-DEFINITION`, textual/preprocessor-like), and — the modern, recommended approach — **classes and methods** 
 
 ## 🧩 Calling a Function Module
 
@@ -13,7 +13,6 @@ CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
   IMPORTING output = lv_internal_value.
 ```
 
-> ⚠️ `CALL FUNCTION` is for **function modules only**. A class method is called as `class=>method( ... )` or `object->method( ... )` — never with `CALL FUNCTION`. See [03-Variables](../03-Variables/README.md#-calling-methods-function-modules--includes) for the method-call forms.
 
 ### 🔁 Conversion Exits
 
@@ -80,7 +79,7 @@ CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
   IMPORTING output = ls_data-data.
 ```
 
-> 💡 **Modern alternative:** for the `ALPHA` conversion exit specifically, the string template operator `|{ value ALPHA = IN }|` / `|{ value ALPHA = OUT }|` (see [02-Data-Types](../02-Data-Types/README.md#-type-conversions)) achieves the same result without a function module call.
+
 
 ### 📐 Unit Conversions
 
@@ -229,7 +228,7 @@ CASE sy-subrc.
 ENDCASE.
 ```
 
-> ⚠️ **RFC destinations carry authorization implications.** A destination configured with stored credentials executes in the target system as *that* user, not as the caller — so the calling program becomes responsible for deciding who may trigger it. A trusted-RFC destination propagates the caller's identity instead, and requires the corresponding authorizations in the target system. Never assume the remote side re-checks what the local side allowed: authorization-check the *entry point* in your own program, and keep destination names in Customizing rather than hardcoded.
+
 
 ## 🧵 Macros (`DEFINE` / `END-OF-DEFINITION`)
 
@@ -269,9 +268,6 @@ END-OF-DEFINITION.
 conv_char '-' <fs_data>-value ' '.
 ```
 
-> 💡 The `gx` macro above is the classic idiom for filling a BAPI structure and its `...X` "changed flag" companion in one line — `&1x` works because the macro is expanded as text before compilation. It is genuinely useful, and genuinely untypeable. That trade-off is why macros persist in BAPI-heavy code.
->
-> Character-transliteration macros (replacing locale-specific characters) are common in localized systems but are encoding-dependent — verify the behaviour against your system's code page before relying on them.
 
 ## 📞 Calling Other Programs — SUBMIT & Screen Chaining
 
@@ -297,49 +293,3 @@ IF <fs_xvbuv> IS ASSIGNED.
   DATA(lt_xvbuv) = <fs_xvbuv>.
 ENDIF.
 ```
-> ⚠️ Reading another program's globals via `ASSIGN ('(PROGRAM)FIELD')` is a powerful but fragile technique (tightly coupled to SAP-internal program structures, can break with support packages). Use it only when there is no supported API alternative, and document it clearly.
-
-## 📊 Modularization Techniques Compared
-
-| Technique | Reusable Across Programs? | Type-Checked? | Directly Remote-Callable? | Lifecycle | Recommended For |
-|---|---|---|---|---|---|
-| `FORM`/`PERFORM` | ❌ No (same program only) | ⚠️ Only if parameters are typed | ❌ No | `LEGACY / HISTORICAL REFERENCE` | Reading existing code; not for new development |
-| Macro (`DEFINE`) | ❌ No (same program only) | ❌ No | ❌ No | `LEGACY / HISTORICAL REFERENCE` | Reading existing code; trivial local repetition at most |
-| Function Module | ✅ Yes (via its function group) | ✅ Yes | ✅ Yes, if the FM is RFC-enabled | `CLASSIC BUT STILL RELEVANT` | Remote-callable logic, BAPIs, compatibility with existing APIs |
-| Class/Method | ✅ Yes (if a global class) | ✅ Yes | ❌ **Not directly** — see below | `CURRENT / RECOMMENDED` | All new development |
-
-> ⚠️ **There is no such thing as an "RFC-enabled method".** Remote callability is a property of a *function module*, not of a method. To expose class logic to another system you wrap it — in an RFC-enabled function module, or behind a service model such as OData/RAP or a web service. Keep the logic in the class and let the wrapper be a thin adapter.
-
-## ✅ Best Practices
-
-- Prefer **methods on classes** for new development; use function modules mainly when remote callability or compatibility with existing APIs (BAPIs) is required.
-- Avoid macros for anything beyond trivial, local repetition — they bypass type checking and cannot be debugged line by line.
-- Type every parameter, including `FORM ... USING` parameters in code you have to touch anyway.
-- Always check `sy-subrc` / handle `EXCEPTIONS` after `CALL FUNCTION` — and handle `system_failure` / `communication_failure` for remote calls.
-- Use `SUBMIT ... AND RETURN` (not a plain `SUBMIT`) when you need control to come back to your program.
-- Keep RFC destination names in Customizing, not in the code.
-
-## ⚠️ Common Mistakes
-
-- Calling a class method with `CALL FUNCTION`.
-- Forgetting the `OTHERS = n` catch-all in a `CALL FUNCTION ... EXCEPTIONS` list.
-- Omitting `system_failure` / `communication_failure` on a `DESTINATION` call, turning an unreachable system into a short dump.
-- Using `CHECK` where `IF` is meant — `CHECK` leaves the whole processing block when its condition is false, which inverts an error-handling branch.
-- Using a macro where a method would be clearer and safer.
-- Getting the conversion-exit direction wrong (`INPUT` = external→internal, `OUTPUT` = internal→external), leading to double-converted or wrongly-padded keys.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between a function module and a BAPI (a BAPI is a function module that belongs to the official Business Object API, is RFC-enabled, and follows strict naming and interface conventions).
-- Explain how you would expose a class's logic to another system, and why "make the method RFC-enabled" is not an answer.
-- Be ready to explain why macros are discouraged in modern ABAP.
-- Explain what a conversion exit is and give an example (`ALPHA`, `MATN1`).
-- Explain the difference between `CHECK` and `IF`, and where each belongs.
-
-## 🔗 Related Chapters
-
-- [03-Variables](../03-Variables/README.md#-form--perform-classical-subroutines) — `FORM`/`PERFORM` syntax in detail
-- [10-Objects](../10-Objects/README.md)
-- [14-Function-Modules](../14-Function-Modules/README.md)
-- [15-BAPIs](../15-BAPIs/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md)
