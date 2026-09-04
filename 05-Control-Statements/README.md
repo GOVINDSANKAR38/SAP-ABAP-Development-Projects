@@ -80,29 +80,4 @@ DATA(lv_status) = SWITCH char10( sy-msgty
 | `COND #( )` | Assigning a value based on one or more conditions | ✅ Yes |
 | `SWITCH #( )` | Assigning a value based on **one** variable's value | ✅ Yes |
 
-## ✅ Best Practices
 
-- Use `COND`/`SWITCH` when the goal is to **compute a value** — they remove boilerplate `IF`/`ELSE` blocks that repeat the same assignment target.
-- Use `CASE`/`IF` when the goal is to **execute different logic**, not just assign a value.
-- Always include an `ELSE`/`WHEN OTHERS` branch, especially in status mapping.
-- **State the result type explicitly** (`COND char10( ... )`, `SWITCH string( ... )`) whenever the branches are literals — `#` will derive a type from the first `THEN`, and it may not be the one you want.
-
-## ⚠️ Common Mistakes
-
-- Using `COND`/`SWITCH` for complex multi-statement branches — they are expressions, not substitutes for full `IF` blocks.
-- Relying on `#` and getting a narrower type than intended, so later branches are silently truncated.
-- Forgetting that `COND` without an `ELSE` returns the type's **initial value** when nothing matches, hiding the "no match" case.
-- Getting `CHECK`'s polarity backwards, so the block is abandoned on the success path.
-- Overusing `CHECK` deep inside nested loops — prefer an explicit `IF ... CONTINUE`/`EXIT`.
-
-## 🎤 Interview & Review Checkpoints
-
-- Be ready to rewrite a nested `IF`/`ELSEIF` chain as a `COND` expression, and explain the trade-offs.
-- Explain how `#` resolves for a constructor expression, and when you must give the type explicitly.
-- Explain what happens when `CHECK` evaluates to false inside a `LOOP` vs. inside a method or event block.
-
-## 🔗 Related Chapters
-
-- [04-Operators](../04-Operators/README.md)
-- [06-Loops](../06-Loops/README.md)
-- [07-Internal-Tables](../07-Internal-Tables/README.md) — `COND` inside `VALUE`/`REDUCE` expressions
