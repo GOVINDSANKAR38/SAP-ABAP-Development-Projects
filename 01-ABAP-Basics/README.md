@@ -4,7 +4,7 @@
 
 Every ABAP program (report, class pool, or function pool) is built from a set of well-known **building blocks**: declarations, processing blocks (events), and statements. This chapter covers the skeleton of a classic ABAP report and the fundamental syntax you will see everywhere else in this guide.
 
-> This chapter intentionally keeps a **global class + event blocks** structure, since that is the most common real-world pattern for OOP-based reports (see [13-ALV](../13-ALV/README.md) for the full example this snippet is taken from).
+
 
 ## 🧱 Anatomy of an ABAP Program
 
@@ -66,25 +66,3 @@ sequenceDiagram
 | `START-OF-SELECTION` | Main processing block — the default block if none is specified |
 | `END-OF-SELECTION` | After all `START-OF-SELECTION` processing, typically used to display results |
 
-## ✅ Best Practices
-
-- Prefer **object-oriented design** (local classes) over pure procedural code, even in classical reports — it keeps global state to a minimum and is easier to test.
-- Keep the global declaration section small; move working data into class attributes or method-local variables.
-- Use a header comment to record **why the program exists** and any non-obvious constraint. Author and date are already in version control and in the object's attributes, so a banner that repeats them just goes stale — many organisations still mandate one, so follow your team's standard, but put the effort into the purpose line.
-
-## ⚠️ Common Mistakes
-
-- Forgetting `DEFERRED` when a class is referenced before its definition — causes a syntax error.
-- Mixing classical procedural logic and OOP logic without a clear separation, making the report hard to navigate.
-- Doing heavy logic directly in `INITIALIZATION` — this event should stay lightweight (default values only).
-
-## 🎤 Interview Tips
-
-- Be ready to explain the **order of ABAP report events** (`INITIALIZATION` → `AT SELECTION-SCREEN` → `START-OF-SELECTION` → `END-OF-SELECTION`).
-- Know the difference between a **report program** (`REPORT`), a **function group**, and a **class pool** (`CLASS ... DEFINITION PUBLIC`).
-
-## 🔗 Related Chapters
-
-- [10-Objects](../10-Objects/README.md) — classes used inside reports
-- [12-Selection-Screens](../12-Selection-Screens/README.md) — selection-screen events in detail
-- [13-ALV](../13-ALV/README.md) — the full OOP ALV report this example is extracted from
