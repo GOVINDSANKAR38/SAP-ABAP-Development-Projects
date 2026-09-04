@@ -200,9 +200,7 @@ CASE sy-subrc.
 ENDCASE.
 ```
 
-> ⚠️ **Order `CATCH` clauses from most specific to most general.** `cx_sy_zerodivide` is a subclass of `cx_sy_arithmetic_error`; `cx_sy_conversion_no_number` and `cx_sy_conversion_overflow` are subclasses of `cx_sy_conversion_error`. Listing a superclass first makes every subclass handler below it dead code.
 
-> ⚠️ **Do not reach for `CATCH cx_root` by default.** It catches programming errors as well as business ones, which turns a bug into a silently swallowed message. Catch the exceptions you can actually handle. A `cx_root` catch is defensible only at an **outermost boundary** — a job step, an RFC entry point, a request handler — where its job is to *log the failure and re-raise or terminate cleanly*, never to continue as if nothing happened.
 > ```abap
 > " Boundary handler - logs and re-raises, does not swallow
 > TRY.
@@ -236,17 +234,7 @@ APPEND VALUE #( username = sy-uname
                 logtime  = sy-uzeit ) TO lt_log.
 ```
 
-> ⚠️ `INTO CORRESPONDING FIELDS OF @DATA(...)` is not valid — an inline declaration has no type to derive from in that form. Either declare the target explicitly, or list the columns and use a plain `INTO @DATA(...)` as above.
-
-### Application Log (BAL)
-
-For anything beyond a private audit trail, prefer SAP's standard **Application Log** over a custom Z-table: you get a display UI (`SLG1`), retention and deletion handling, and a consistent API.
-
-- **Log objects and sub-objects** are defined in transaction `SLG0`, and logs are displayed with `SLG1`.
-- The classic API is the **`BAL_*` function module family** — `BAL_LOG_CREATE` to open a log handle, `BAL_LOG_MSG_ADD` to add messages to it, and `BAL_DB_SAVE` to persist them.
-- Newer releases also ship an **object-oriented API**, the `CL_BALI_*` classes (`CL_BALI_LOG` for the log itself, `CL_BALI_LOG_DB` for persistence, plus setter classes for messages, free text and exceptions). It is released for ABAP Cloud development and calls the same underlying mechanism.
-
-> 📝 **NEEDS OFFICIAL VERIFICATION** — confirm which of the two APIs is available and released on your target release before choosing one. Check the exact class and function module signatures in SE24/SE37 rather than copying a signature from any guide, including this one.
+>37 rather than copying a signature from any guide, including this one.
 
 ## 🛠️ System/Environment Checks — and Why to Avoid Them
 
@@ -260,9 +248,7 @@ CASE sy-sysid.
 ENDCASE.
 ```
 
-> ⚠️ **Hardcoding system IDs or client numbers to switch behaviour is a transport hazard.** The code that runs in production is then *not* the code you tested in development, and the difference is invisible in the transport. It also breaks the moment a system is copied, renamed, or an extra client is added.
->
-> Drive environment-specific behaviour from **configuration** instead — a Customizing table, a `TVARVC` variant variable, or a feature switch — so the same code path runs everywhere and only the data differs:
+
 > ```abap
 > SELECT SINGLE is_active
 >   FROM zsm_t_feature
@@ -274,40 +260,6 @@ ENDCASE.
 > ENDIF.
 > ```
 
-> ⚠️ **`CHECK` is not a general-purpose guard.** `CHECK <cond>` leaves the entire current processing block when the condition is **false**. A statement such as `CHECK sy-subrc <> 0 AND lt_data IS NOT INITIAL.` therefore exits on the *success* path, which is almost never what the author intended. Use `IF` when you want to branch, and reserve `CHECK` for genuinely skipping the current loop pass.
-
-## ✅ Best Practices
-
-- **Catch the specific exceptions you can handle.** Order `CATCH` clauses most-specific first. Use a `cx_root` catch only at an outermost boundary, and make it log and re-raise.
-- Collect and log **all** messages, not just the first error, when processing bulk data (mass BAPI calls, batch jobs).
-- Use message classes (SE91) instead of hardcoded literal text for anything user-facing or translatable.
-- Prefer the SAP Application Log (`SLG0`/`SLG1` and the `BAL_*` or `CL_BALI_*` API) over ad-hoc Z-tables for anything beyond the simplest debugging trace.
-- Propagate a caught exception's text with `lx_error->get_text( )` rather than inventing a new message.
-- Drive environment-specific behaviour from Customizing, not from `sy-sysid` / `sy-mandt`.
-
-## ⚠️ Common Mistakes
-
-- Listing a superclass `CATCH` before its subclasses, making the subclass handlers unreachable.
-- Reaching for `CATCH cx_root` as the default, which hides programming errors.
-- Swallowing exceptions silently (`CATCH cx_root.` with an empty block) — always log or re-raise.
-- Using `MESSAGE ... RAISING <exception>` without a corresponding `EXCEPTIONS` entry in the function's signature.
-- Using `CHECK` where `IF` is meant, and inverting the error branch.
-- Using `CONTINUE` outside a loop.
-- Branching on hardcoded system IDs or client numbers.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between classic (`EXCEPTIONS`) and class-based (`TRY`/`CATCH`/`RAISE EXCEPTION`) error handling.
-- Explain why `CATCH` order matters and how to determine it from the exception hierarchy.
-- Argue both sides of catching `cx_root`, and say where it belongs.
-- Know how to propagate a caught exception's message text (`lx_error->get_text( )`).
-- Explain how you would log a mass-processing run so that every failed record is traceable afterwards.
-
-## 🐞 Debugger — Scope Note
-
-This chapter deliberately focuses on **messages, exceptions and logging**. Interactive debugging (breakpoints, watchpoints, `BREAK-POINT`, `ASSERT`, checkpoint groups in `SAAB`, debugging background and update-task processing, and the layer-aware debugger in ADT) is not covered here.
-
-> ⚠️ One point worth stating even so: **debugging in a production system is a controlled, audited activity.** Changing a variable's value in the debugger ("debug and replace") requires elevated authorization and is logged, because it bypasses every application check. Treat production debug authorization as a privileged permission, not a convenience.
 
 ## 🖥️ Related Transaction Codes
 
@@ -319,8 +271,3 @@ This chapter deliberately focuses on **messages, exceptions and logging**. Inter
 | SAAB | Maintain checkpoint groups (assertions, breakpoints, logging) |
 | ST22 | Analyze short dumps |
 | `/h` | OK-code (not a transaction) — activates the ABAP Debugger from any screen |
-
-## 🔗 Related Chapters
-
-- [15-BAPIs](../15-BAPIs/README.md) — `BAPIRET2` return handling
-- [19-Performance](../19-Performance/README.md)
