@@ -1,127 +1,821 @@
-# ABAPGuide — A Practical SAP ABAP Engineering Reference
+# 🚀 SAP ABAP Development Projects
 
-A working reference for SAP ABAP as it is actually written in productive landscapes — from classic procedural and dynpro code through ABAP Objects to modern expression syntax and ABAP SQL. Built from accumulated real SAP project notes, patterns and examples, and organised so that each technology carries an explicit **lifecycle status**: what is current, what is classic but still live, and what is there for historical reference.
+<p align="center">
+  <strong>Practical SAP ABAP implementations covering Classic ABAP, Object-Oriented ABAP, ALV, BDC, BAPIs, BAdIs, Enhancements, ABAP SQL, Modularization, Debugging, Performance Optimization, and Modern ABAP development.</strong>
+</p>
 
-That last part is the point. Real SAP systems run several generations of ABAP at once. A reference that shows only the newest syntax is no help when you open a twelve-year-old pricing routine; one that shows everything without saying which is which is no help either.
+<p align="center">
+  <img src="https://img.shields.io/badge/SAP-ABAP-0FAAFF?style=for-the-badge&logo=sap&logoColor=white" />
+  <img src="https://img.shields.io/badge/ABAP-Development-1F6FEB?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/ALV-Reports-6A5ACD?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/BAPI-Integration-FF8C00?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/BAdI-Enhancements-2E8B57?style=for-the-badge" />
+</p>
 
-### Scope
+---
 
-- **Covers:** ABAP language fundamentals, internal tables, ABAP SQL, modularization, ABAP Objects, classical reports, selection screens and dynpro, three generations of ALV, BAPIs, BAdIs and the enhancement framework, messages and exceptions, and performance — including the modern (7.40-generation) expression syntax throughout.
-- **Does not cover:** RAP, CDS, AMDP, ABAP Unit, or ABAP Cloud beyond the boundary explained in [Chapter 21](21-Classic-vs-Modern-ABAP/README.md). That is a deliberate boundary, not an oversight.
-- **Examples are illustrative.** They are written to teach a pattern, not to be dropped into production unchanged. See [How to Use](#-how-to-use).
-- **Not official SAP documentation.** For anything version-sensitive, the [ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/index.htm) is the authority.
+## 🧭 Overview
 
-## ✨ Highlights
+This repository contains a structured collection of **SAP ABAP development implementations**, covering both classical SAP development techniques and modern ABAP programming practices.
 
-- **21 structured chapters** plus a quick-reference Examples section
-- **100+ annotated ABAP examples** drawn from real project work
-- **Explicit classic-to-modern lifecycle guidance** on every major technology
-- **Internal tables and modern expressions** — `VALUE`, `FOR`, `REDUCE`, `FILTER`, `COND`, table expressions, secondary keys
-- **ABAP SQL in depth** — joins, subqueries, aggregation, `FOR ALL ENTRIES` and its pitfalls, dynamic SQL
-- **Three ALV generations side by side** — `CL_SALV_TABLE`, `REUSE_ALV_*`, `CL_GUI_ALV_GRID`
-- **Integration and extensibility** — BAPIs, BAdIs, enhancements, BDC, RFC, with the transaction and authorization implications spelled out
+The projects are organized by development area so that each topic can be explored independently — from ABAP fundamentals and internal tables to enterprise-oriented concepts such as **ALV reporting, BDC, BAPIs, BAdIs, enhancements, ABAP SQL, performance optimization, and Object-Oriented ABAP**.
 
-## 🧭 Classic vs Modern ABAP
+The repository is designed around practical implementation rather than isolated syntax examples, with a focus on understanding how different ABAP technologies are used together in SAP development environments.
 
-**→ [Chapter 21 — Classic vs Modern ABAP](21-Classic-vs-Modern-ABAP/README.md)**
+---
 
-The chapter that ties the rest together: why productive landscapes contain several ABAP generations, what to use for new on-premise development, what remains classic but relevant, what is historical reference, and what changes under ABAP Cloud. Includes a decision table for the common maintenance and greenfield scenarios.
+## ✨ What You'll Find Here
 
-## 🔍 Find It Fast
+<table>
+<tr>
+<td width="50%">
 
-| I need to… | Chapters |
-|---|---|
-| Get the language fundamentals right | [01](01-ABAP-Basics/README.md) · [02](02-Data-Types/README.md) · [03](03-Variables/README.md) · [04](04-Operators/README.md) · [05](05-Control-Statements/README.md) |
-| Work with internal tables and modern expressions | [06](06-Loops/README.md) · [07](07-Internal-Tables/README.md) |
-| Read or write database data safely | [08](08-Open-SQL/README.md) · [15](15-BAPIs/README.md) |
-| Structure and reuse code | [09](09-Modularization/README.md) · [10](10-Objects/README.md) |
-| Build a report or a screen | [11](11-Classical-Reports/README.md) · [12](12-Selection-Screens/README.md) · [13](13-ALV/README.md) |
-| Integrate or extend standard SAP | [14](14-Function-Modules/README.md) · [15](15-BAPIs/README.md) · [16](16-BADIs/README.md) · [17](17-Enhancements/README.md) |
-| Handle errors, log, and tune | [18](18-Debugging/README.md) · [19](19-Performance/README.md) |
-| Review code against a checklist | [20](20-Best-Practices/README.md) |
-| Decide between classic and modern | [21](21-Classic-vs-Modern-ABAP/README.md) |
+### 💻 ABAP Programming
 
-## 🏷️ Lifecycle Legend
+* ABAP fundamentals
+* Variables & data types
+* Operators
+* Control statements
+* Loops
+* Internal tables
+* Modern ABAP syntax
+* String handling
+* Type conversions
 
-Chapters and examples are labelled with one of these. Full definitions in [Chapter 21](21-Classic-vs-Modern-ABAP/README.md#-the-five-categories-used-in-this-guide).
+</td>
+<td width="50%">
 
-| Label | Meaning |
-|---|---|
-| **CURRENT / RECOMMENDED** | Reach for this in new on-premise development |
-| **CLASSIC BUT STILL RELEVANT** | Widespread and supported; you must be able to maintain it |
-| **LEGACY / HISTORICAL REFERENCE** | Superseded — read it, don't write it |
-| **ABAP CLOUD / MODERN CONTEXT** | Belongs to, or explains, the ABAP Cloud development model |
-| **VERSION-DEPENDENT** | Availability depends on your release — verify before relying on it |
+### 🏗️ ABAP Architecture
 
-## 📂 Chapter Reference
+* Modularization
+* Function Modules
+* ABAP Objects
+* Classes & methods
+* Inheritance
+* Encapsulation
+* Interfaces
+* Reusable components
 
-| Folder | Topic | Description | Context |
-|---|---|---|---|
-| [01-ABAP-Basics](01-ABAP-Basics/README.md) | ABAP Basics | Program structure, report events, syntax fundamentals | Current |
-| [02-Data-Types](02-Data-Types/README.md) | Data Types | Elementary types, structures, type conversions | Current |
-| [03-Variables](03-Variables/README.md) | Variables | `DATA`, `CONSTANTS`, inline declarations, `FORM`/`PERFORM` | Current + legacy |
-| [04-Operators](04-Operators/README.md) | Operators | Arithmetic, comparison, built-in math functions | Current |
-| [05-Control-Statements](05-Control-Statements/README.md) | Control Statements | `IF`, `CASE`, `CHECK`, `COND`, `SWITCH` | Current |
-| [06-Loops](06-Loops/README.md) | Loops | `LOOP`, `DO`, `WHILE`, control breaks, `GROUP BY`, `COLLECT`, ranges | Current + classic |
-| [07-Internal-Tables](07-Internal-Tables/README.md) | Internal Tables | Table types, keys, `VALUE`/`FOR`/`REDUCE`/`FILTER`, field symbols | Current |
-| [08-Open-SQL](08-Open-SQL/README.md) | ABAP SQL | `SELECT`, joins, aggregation, CRUD, **SAP LUW & transaction ownership** | Current + version-dependent |
-| [09-Modularization](09-Modularization/README.md) | Modularization | Function modules, conversion exits, RFC, macros, `SUBMIT` | Classic + legacy |
-| [10-Objects](10-Objects/README.md) | Objects / OOP | Classes, visibility, inheritance, static vs. instance | Current |
-| [11-Classical-Reports](11-Classical-Reports/README.md) | Classical Reports | List events, `WRITE`, dynamic tables + authorization | Classic |
-| [12-Selection-Screens](12-Selection-Screens/README.md) | Selection Screens & Dynpro | Selection screens, PBO/PAI, screen modification, popups | Classic |
-| [13-ALV](13-ALV/README.md) | ALV | `CL_SALV_TABLE`, `REUSE_ALV_*`, `CL_GUI_ALV_GRID`, field catalogs, events | Current + classic |
-| [14-Function-Modules](14-Function-Modules/README.md) | BDC / Batch Input | `CALL TRANSACTION`, BDC tables, message handling, authorization | Classic |
-| [15-BAPIs](15-BAPIs/README.md) | BAPIs | `BAPIRET2`, transaction control, standard call pattern | Classic, still relevant |
-| [16-BADIs](16-BADIs/README.md) | BAdIs | Classic vs. new BAdIs, filters, implementation pattern | Current + classic |
-| [17-Enhancements](17-Enhancements/README.md) | Enhancements | User exits vs. customer exits, enhancement points, modifications | Classic + legacy |
-| [18-Debugging](18-Debugging/README.md) | Messages & Exceptions | `MESSAGE`, exception handling, application log | Current |
-| [19-Performance](19-Performance/README.md) | Performance & Memory | Internal table tuning, ABAP Memory, database access | Current |
-| [20-Best-Practices](20-Best-Practices/README.md) | Best Practices | Naming conventions, code review checklist | Current |
-| [21-Classic-vs-Modern-ABAP](21-Classic-vs-Modern-ABAP/README.md) | **Classic vs Modern** | **Lifecycle map, ABAP Cloud boundary, decision table** | **Start here for context** |
-| [Examples](Examples/README.md) | Examples | Strings, dates/times, conversions | Current + legacy |
+</td>
+</tr>
 
-## 🚀 How to Use
+<tr>
+<td>
 
-1. Jump to the chapter matching your need via [Find It Fast](#-find-it-fast), or read [Chapter 21](21-Classic-vs-Modern-ABAP/README.md) first for the lifecycle map.
-2. Each chapter follows the same shape: introduction → examples → best practices → common mistakes → interview & review checkpoints → related transaction codes.
-3. **Understand what kind of snippet you are reading:**
-   - **Complete examples** — self-contained programs or classes (for instance the ALV reports in [Chapter 13](13-ALV/README.md)). These show a full working structure.
-   - **Contextual snippets** — the majority. They demonstrate one statement or pattern and assume surrounding declarations. Adapt the names and types to your own program.
-4. **Examples are illustrative, not production-ready as-is.** They are simplified to make the pattern visible: error handling, authorization checks and locking are shown where they are the point being made, and abbreviated where they are not. Review any snippet against your own standards before using it, and syntax-check it in your target system.
+### 📊 Reporting
 
-## ⚙️ Compatibility & Version Notes
+* Classical reports
+* Selection screens
+* ALV reports
+* `CL_SALV_TABLE`
+* `REUSE_ALV_*`
+* `CL_GUI_ALV_GRID`
+* Field catalogs
+* ALV events
+* Dynamic reporting
 
-- This guide uses the **modern expression syntax introduced across the ABAP 7.40 generation** — inline declarations, `VALUE`, `NEW`, `CONV`, `CORRESPONDING`, `COND`, `SWITCH`, `REDUCE`, `FILTER`, `FOR`, table expressions and string templates.
-- **Individual ABAP SQL features require later releases.** SQL expressions in the field list, host expressions, and internal tables as data sources all arrived progressively across the 7.4x/7.5x releases, not all at once. These are flagged **VERSION-DEPENDENT** where they appear.
-- **This guide deliberately states no exact minimum release or support-package numbers.** Verify each feature against the [ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/index.htm) for your target system before relying on it.
-- **Terminology:** SAP's current umbrella term for the SQL statements is **ABAP SQL**; "Open SQL" is the historical name and is still in wide use. Both appear here. The chapter folder keeps its `08-Open-SQL` name so existing links continue to work.
-- **Tooling:** ABAP Development Tools (ADT) for Eclipse is recommended; the classic workbench (SE38/SE80/SE24/SE37) is assumed knowledge where transaction codes are referenced.
+</td>
+<td>
 
-## 👥 Who This Is For
+### 🔗 SAP Integration
 
-- **SAP developers maintaining productive ABAP** who need a working example fast, with the context to know whether the pattern is still the right one.
-- **Engineers modernizing classic ABAP** who need to tell deliberate legacy from accidental legacy before they change anything.
-- **Developers working across SAP GUI and modern ABAP syntax**, where both generations sit in the same program.
-- **Technical leads reviewing implementation patterns** — the per-chapter review checkpoints and the [Chapter 20 checklist](20-Best-Practices/README.md) are written for that use.
+* BAPIs
+* BAPI return handling
+* Transaction handling
+* RFC concepts
+* BDC / Batch Input
+* `CALL TRANSACTION`
+* Batch input processing
+* Message handling
 
-Newcomers to ABAP will find the chapters readable in order, but the reference is written for people who already program.
+</td>
+</tr>
 
-## 🤝 Contributing
+<tr>
+<td>
 
-Corrections and additions are welcome — particularly anything that fixes a technical inaccuracy or clarifies a lifecycle classification.
+### 🧩 SAP Enhancements
 
-1. Fork the repository and create a branch (`git checkout -b improvement/topic-name`).
-2. Keep the existing chapter structure and lifecycle labelling.
-3. For anything version-sensitive, cite the ABAP Keyword Documentation rather than asserting a release number.
-4. Open a pull request describing the change.
+* BAdIs
+* BAdI implementations
+* Filter-based implementations
+* Enhancement points
+* User exits
+* Customer exits
+* Enhancement framework
+* Modification concepts
 
-## 📄 License
+</td>
+<td>
 
-Licensed under the [MIT License](LICENSE) — free to use for learning, teaching and reference.
+### 🗄️ Database Development
 
-## 👤 Author
+* ABAP SQL
+* SELECT statements
+* Joins
+* Aggregations
+* Subqueries
+* CRUD operations
+* Internal tables as data sources
+* `FOR ALL ENTRIES`
+* Dynamic SQL
 
-**Serhat Mercan** — SAP Technical Lead · Enterprise SAP Engineering · ABAP / ABAP Cloud · SAP BTP
+</td>
+</tr>
 
-- GitHub: [github.com/serhatmercan](https://github.com/serhatmercan)
-- LinkedIn: [linkedin.com/in/serhat-mercan](https://www.linkedin.com/in/serhat-mercan/)
+<tr>
+<td>
+
+### 🐞 Quality & Reliability
+
+* Debugging
+* Exception handling
+* Messages
+* Application logging
+* Error handling
+* Authorization considerations
+* Common ABAP pitfalls
+
+</td>
+<td>
+
+### ⚡ Performance
+
+* Internal table optimization
+* Database access optimization
+* ABAP memory
+* Efficient SQL
+* Table keys
+* Secondary keys
+* Performance-oriented coding
+
+</td>
+</tr>
+
+</table>
+
+---
+
+# 🗺️ Project Roadmap
+
+```text
+                         SAP ABAP
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+     FUNDAMENTALS        REPORTING          INTEGRATION
+        │                   │                   │
+        ├─ ABAP Basics     ├─ Reports          ├─ BAPIs
+        ├─ Data Types      ├─ Selection Screens├─ BDC
+        ├─ Variables       ├─ ALV              ├─ RFC
+        ├─ Operators       └─ Dynpro           └─ Function Modules
+        ├─ Control Flow
+        ├─ Loops
+        └─ Internal Tables
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+      OOP              ENHANCEMENTS         DATABASE
+        │                   │                   │
+        ├─ Classes          ├─ BAdIs            ├─ ABAP SQL
+        ├─ Methods          ├─ User Exits       ├─ Joins
+        ├─ Inheritance      ├─ Customer Exits   ├─ Aggregation
+        ├─ Encapsulation    └─ Enhancement      ├─ Subqueries
+        └─ Interfaces          Framework        └─ Dynamic SQL
+                            │
+                    ┌───────┴────────┐
+                    │                │
+                 QUALITY          PERFORMANCE
+                    │                │
+                 Debugging       Optimization
+                 Exceptions       Memory
+                 Logging          Database Access
+                 Best Practices   Internal Tables
+```
+
+---
+
+# 📂 Repository Structure
+
+| #                           | Module          | Main Topics                                                 |
+| --------------------------- | --------------- | ----------------------------------------------------------- |
+| `01-ABAP-Basics`            | ABAP Basics     | Program structure, syntax, report events                    |
+| `02-Data-Types`             | Data Types      | Elementary types, structures, conversions                   |
+| `03-Variables`              | Variables       | `DATA`, `CONSTANTS`, inline declarations                    |
+| `04-Operators`              | Operators       | Arithmetic, comparison, logical operations                  |
+| `05-Control-Statements`     | Control Flow    | `IF`, `CASE`, `CHECK`, `COND`, `SWITCH`                     |
+| `06-Loops`                  | Loops           | `LOOP`, `DO`, `WHILE`, `GROUP BY`, `COLLECT`                |
+| `07-Internal-Tables`        | Internal Tables | Keys, table expressions, `VALUE`, `FOR`, `REDUCE`, `FILTER` |
+| `08-Open-SQL`               | ABAP SQL        | SELECT, joins, aggregation, CRUD, transactions              |
+| `09-Modularization`         | Modularization  | Function modules, RFC, macros, conversion exits             |
+| `10-Objects`                | ABAP Objects    | Classes, methods, inheritance, encapsulation                |
+| `11-Classical-Reports`      | Reports         | Classical list reporting, events, authorization             |
+| `12-Selection-Screens`      | Dynpro          | Selection screens, PBO, PAI, screen modification            |
+| `13-ALV`                    | ALV             | SALV, ALV Grid, field catalogs, events                      |
+| `14-Function-Modules`       | BDC             | Batch Input, `CALL TRANSACTION`, message handling           |
+| `15-BAPIs`                  | BAPI            | Standard SAP interfaces, `BAPIRET2`, transactions           |
+| `16-BADIs`                  | BAdI            | BAdI definitions, implementations, filters                  |
+| `17-Enhancements`           | Enhancements    | User exits, customer exits, enhancement points              |
+| `18-Debugging`              | Debugging       | Messages, exceptions, application logging                   |
+| `19-Performance`            | Performance     | Internal tables, memory, database optimization              |
+| `20-Best-Practices`         | Best Practices  | Clean coding, naming, review checklist                      |
+| `21-Classic-vs-Modern-ABAP` | ABAP Evolution  | Classic vs modern ABAP                                      |
+| `Examples`                  | Examples        | Strings, dates, conversions and additional patterns         |
+
+---
+
+# 💻 01 — ABAP Fundamentals
+
+The foundation of the repository covers the core ABAP programming model.
+
+### Topics
+
+* Program structure
+* Report events
+* Variables
+* Constants
+* Data types
+* Structures
+* Type conversion
+* Operators
+* Conditional statements
+* Loops
+* Inline declarations
+* Modern expression syntax
+
+### Modern ABAP Expressions
+
+Examples include:
+
+```abap
+DATA(result) = VALUE string_table(
+  ( `SAP` )
+  ( `ABAP` )
+  ( `S/4HANA` )
+).
+```
+
+Modern constructs covered throughout the repository include:
+
+```text
+VALUE
+NEW
+CONV
+CORRESPONDING
+COND
+SWITCH
+REDUCE
+FILTER
+FOR
+Table Expressions
+String Templates
+Inline Declarations
+```
+
+---
+
+# 📦 02 — Internal Tables
+
+Internal tables are one of the most important data structures in ABAP.
+
+This section covers:
+
+* Standard tables
+* Sorted tables
+* Hashed tables
+* Table keys
+* Secondary keys
+* Field symbols
+* Data references
+* Table expressions
+* Iterations
+* Filtering
+* Reductions
+* Grouping
+* Efficient table access
+
+Example concepts:
+
+```abap
+VALUE #( )
+FILTER #( )
+FOR ...
+REDUCE #( )
+itab[ ... ]
+LOOP AT ...
+```
+
+---
+
+# 🗄️ 03 — ABAP SQL
+
+Database access is covered using practical ABAP SQL patterns.
+
+### Covered Concepts
+
+* `SELECT`
+* `WHERE`
+* `ORDER BY`
+* `GROUP BY`
+* Aggregation
+* Inner joins
+* Outer joins
+* Subqueries
+* CRUD operations
+* Host variables
+* Internal tables as data sources
+* `FOR ALL ENTRIES`
+* Dynamic SQL
+* Transaction handling
+
+### Database Optimization
+
+The repository also covers techniques for avoiding inefficient database access and improving ABAP application performance.
+
+---
+
+# 🧩 04 — Modularization
+
+Reusable ABAP development patterns include:
+
+* Function Modules
+* Subroutines
+* Macros
+* RFC-enabled concepts
+* Conversion exits
+* `SUBMIT`
+* Reusable processing logic
+
+The objective is to separate application logic into maintainable and reusable components.
+
+---
+
+# 🏗️ 05 — Object-Oriented ABAP
+
+The Object-Oriented ABAP section covers:
+
+* Classes
+* Methods
+* Attributes
+* Constructors
+* Visibility
+* Encapsulation
+* Inheritance
+* Polymorphism
+* Interfaces
+* Static vs instance members
+* Reusable object-oriented design
+
+Example structure:
+
+```text
+Class
+ ├── Attributes
+ ├── Constructor
+ ├── Public Methods
+ ├── Protected Methods
+ └── Private Methods
+```
+
+---
+
+# 📊 06 — ALV Reporting
+
+The repository includes implementations covering multiple generations of SAP ALV.
+
+### ALV Technologies
+
+| Technology        | Usage                               |
+| ----------------- | ----------------------------------- |
+| `CL_SALV_TABLE`   | Modern/simple ALV reporting         |
+| `REUSE_ALV_*`     | Classical function-module based ALV |
+| `CL_GUI_ALV_GRID` | Interactive ALV Grid                |
+| Field Catalogs    | Column configuration                |
+| ALV Events        | Interactive reporting               |
+
+### ALV Capabilities
+
+* Tabular reporting
+* Field catalogs
+* Column configuration
+* Sorting
+* Filtering
+* Events
+* Interactive reports
+* Dynamic output
+* Classical and modern ALV approaches
+
+---
+
+# 🔄 07 — BDC / Batch Input
+
+The BDC section demonstrates traditional SAP transaction automation.
+
+### Covered
+
+* Batch Input
+* BDC data structures
+* `CALL TRANSACTION`
+* Transaction processing
+* Screen-field mapping
+* Message handling
+* Error processing
+* Authorization considerations
+
+Typical processing flow:
+
+```text
+Input Data
+    ↓
+BDC Structure
+    ↓
+SAP Transaction
+    ↓
+Screen Processing
+    ↓
+Messages
+    ↓
+Success / Error Handling
+```
+
+---
+
+# 🔗 08 — BAPIs
+
+The BAPI section focuses on standardized SAP business interfaces.
+
+### Covered
+
+* BAPI invocation
+* Import parameters
+* Export parameters
+* Tables parameters
+* `BAPIRET2`
+* Return-message handling
+* Transaction control
+* Commit / rollback concepts
+* Standard SAP business object integration
+
+Typical flow:
+
+```text
+Application
+     ↓
+BAPI
+     ↓
+SAP Business Object
+     ↓
+Validation
+     ↓
+BAPIRET2
+     ↓
+COMMIT / ROLLBACK
+```
+
+---
+
+# 🧱 09 — BAdIs
+
+The BAdI section covers SAP's enhancement mechanism.
+
+### Topics
+
+* BAdI definitions
+* BAdI interfaces
+* Enhancement implementations
+* Implementing classes
+* Single-use BAdIs
+* Multiple-use BAdIs
+* Filter-dependent implementations
+* Fallback implementations
+* Dynamic BAdI invocation
+* Enhancement spots
+
+Conceptual flow:
+
+```text
+SAP Standard Process
+        ↓
+    BAdI Definition
+        ↓
+ Enhancement Spot
+        ↓
+ BAdI Implementation
+        ↓
+ Custom Business Logic
+```
+
+---
+
+# 🛠️ 10 — Enhancements
+
+The enhancement section covers different approaches for extending SAP functionality.
+
+### Topics
+
+* User Exits
+* Customer Exits
+* Enhancement Points
+* Enhancement Framework
+* BAdIs
+* Modification concepts
+* Classic enhancement techniques
+
+The repository also compares classical enhancement approaches with more modern extensibility patterns.
+
+---
+
+# 🖥️ 11 — Classical Reports & Selection Screens
+
+### Classical Reporting
+
+* `WRITE`
+* Report events
+* Dynamic output
+* List processing
+* Authorization considerations
+
+### Selection Screens
+
+* Parameters
+* Select-options
+* Screen events
+* Validation
+* PBO / PAI
+* Screen modification
+* Popups
+* Dynpro concepts
+
+---
+
+# 🐞 12 — Debugging & Exception Handling
+
+Reliable ABAP development requires effective error handling and debugging.
+
+### Covered
+
+* Debugging techniques
+* Breakpoints
+* Messages
+* Exception handling
+* Application logging
+* Error analysis
+* Runtime issues
+* Common programming mistakes
+
+---
+
+# ⚡ 13 — Performance Optimization
+
+Performance-focused implementations cover:
+
+### Internal Table Optimization
+
+* Appropriate table types
+* Primary keys
+* Secondary keys
+* Efficient reads
+* Avoiding unnecessary loops
+
+### Database Optimization
+
+* Efficient SELECT statements
+* Reducing database round trips
+* Join strategies
+* Avoiding unnecessary data retrieval
+* SQL performance considerations
+
+### ABAP Memory
+
+* Memory usage
+* Data processing efficiency
+* Internal table footprint
+* Performance-aware coding
+
+---
+
+# 🧹 14 — ABAP Best Practices
+
+The repository also includes development practices for writing maintainable ABAP.
+
+### Areas Covered
+
+* Naming conventions
+* Clean ABAP principles
+* Readable code
+* Modular design
+* Error handling
+* Authorization awareness
+* Database efficiency
+* Maintainability
+* Code review considerations
+
+---
+
+# 🔀 Classic vs Modern ABAP
+
+SAP landscapes commonly contain multiple generations of ABAP development.
+
+This repository therefore covers both:
+
+```text
+Classic ABAP
+     │
+     ├── Classical Reports
+     ├── Dynpro
+     ├── BDC
+     ├── Function Modules
+     ├── BAPIs
+     ├── Classical ALV
+     └── Enhancements
+     
+Modern ABAP
+     │
+     ├── Inline Declarations
+     ├── Expressions
+     ├── Modern ABAP SQL
+     ├── ABAP Objects
+     └── Modern Development Patterns
+```
+
+The goal is to understand **when different ABAP techniques are relevant**, particularly when working with existing SAP landscapes containing both classical and modern code.
+
+---
+
+# 🧠 Skills Demonstrated
+
+This repository demonstrates practical familiarity with:
+
+### SAP ABAP
+
+`ABAP` · `ABAP SQL` · `ABAP Objects` · `Internal Tables` · `Modularization`
+
+### Reporting
+
+`Classical Reports` · `ALV` · `SALV` · `ALV Grid` · `Selection Screens`
+
+### SAP Integration
+
+`BAPI` · `BDC` · `RFC` · `Function Modules`
+
+### SAP Extensibility
+
+`BAdI` · `User Exits` · `Customer Exits` · `Enhancement Framework`
+
+### Engineering
+
+`Debugging` · `Exception Handling` · `Application Logging` · `Performance Optimization` · `Clean ABAP`
+
+---
+
+# 🎯 SAP ABAP Technology Map
+
+| Technology               | Coverage |
+| ------------------------ | :------: |
+| ABAP Fundamentals        |     ✅    |
+| Data Types               |     ✅    |
+| Variables                |     ✅    |
+| Operators                |     ✅    |
+| Control Statements       |     ✅    |
+| Loops                    |     ✅    |
+| Internal Tables          |     ✅    |
+| ABAP SQL                 |     ✅    |
+| Modularization           |     ✅    |
+| ABAP Objects             |     ✅    |
+| Classical Reports        |     ✅    |
+| Selection Screens        |     ✅    |
+| ALV                      |     ✅    |
+| BDC                      |     ✅    |
+| BAPI                     |     ✅    |
+| BAdI                     |     ✅    |
+| User Exits               |     ✅    |
+| Customer Exits           |     ✅    |
+| Enhancement Framework    |     ✅    |
+| Debugging                |     ✅    |
+| Exception Handling       |     ✅    |
+| Performance Optimization |     ✅    |
+| Best Practices           |     ✅    |
+| Classic ABAP             |     ✅    |
+| Modern ABAP              |     ✅    |
+
+---
+
+# 🛠️ Development Environment
+
+The implementations are intended for SAP ABAP development environments using tools such as:
+
+* SAP GUI
+* ABAP Development Tools (ADT)
+* Eclipse
+* SAP ABAP Workbench
+* SE38
+* SE80
+* SE24
+* SE37
+* SE18 / SE19
+* Debugger
+
+Availability of individual features depends on the SAP system release and development environment.
+
+---
+
+# 📚 Repository Navigation
+
+Use the sections below to jump directly to a topic:
+
+```text
+01 → ABAP Basics
+02 → Data Types
+03 → Variables
+04 → Operators
+05 → Control Statements
+06 → Loops
+07 → Internal Tables
+08 → ABAP SQL
+09 → Modularization
+10 → ABAP Objects
+11 → Classical Reports
+12 → Selection Screens & Dynpro
+13 → ALV
+14 → BDC
+15 → BAPIs
+16 → BAdIs
+17 → Enhancements
+18 → Debugging & Exceptions
+19 → Performance
+20 → Best Practices
+21 → Classic vs Modern ABAP
+    → Additional Examples
+```
+
+---
+
+# 🚀 Learning & Development Path
+
+If you are exploring the repository sequentially, a recommended progression is:
+
+```text
+ABAP Fundamentals
+       ↓
+Data Types & Variables
+       ↓
+Control Flow & Loops
+       ↓
+Internal Tables
+       ↓
+ABAP SQL
+       ↓
+Modularization
+       ↓
+ABAP Objects
+       ↓
+Classical Reports
+       ↓
+ALV
+       ↓
+BDC & BAPIs
+       ↓
+BAdIs & Enhancements
+       ↓
+Debugging
+       ↓
+Performance Optimization
+       ↓
+Best Practices
+       ↓
+Classic vs Modern ABAP
+```
+
+---
+
+# 📌 Important Concepts Covered
+
+The repository brings together several technologies frequently encountered in SAP ABAP development:
+
+> **Reports → ALV → BDC → BAPI → BAdI → Enhancements → ABAP SQL → ABAP Objects → Performance**
+
+This provides a broad view of ABAP development, from low-level language fundamentals to enterprise SAP development concepts.
+
+---
+
+# 👨‍💻 Author
+
+**Govindsankar V**
+
+B.E. Computer Science and Engineering
+Thiagarajar College of Engineering
+
+### Connect
+
+* 💼 [LinkedIn](https://www.linkedin.com/in/govindsankar-v-a2b686347/)
+* 🐙 [GitHub](https://github.com/GOVINDSANKAR38)
+
+---
+
+<p align="center">
+  <strong>🚀 SAP ABAP • Enterprise Development • Clean Code • Continuous Learning</strong>
+</p>
+
+<p align="center">
+  ⭐ Explore the repository • Learn the concepts • Build better ABAP solutions
+</p>
