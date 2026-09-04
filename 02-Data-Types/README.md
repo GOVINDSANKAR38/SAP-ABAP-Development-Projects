@@ -31,7 +31,6 @@ TYPES: BEGIN OF ty_viqmel,
 DATA ls_viqmel TYPE ty_viqmel.
 ```
 
-> See [07-Internal-Tables](../07-Internal-Tables/README.md) for building tables of structures, and [08-Open-SQL](../08-Open-SQL/README.md) for reading DB tables directly into structures.
 
 ## 🧹 Cleaning Up String Data
 
@@ -69,26 +68,3 @@ DATA(ls_data)  = CORRESPONDING zsm_t_data( ls_xdata ).
 
 Conversion exits (`CONVERSION_EXIT_*`) are the classical, function-module–based way of doing the same thing and are still widely used with material numbers, dates, and other domain-specific fields — see [09-Modularization](../09-Modularization/README.md#-conversion-exits).
 
-## ✅ Best Practices
-
-- Prefer `string` for text of unknown/variable length; use fixed `c`/`n` types only when the length is business-defined (e.g., document number).
-- Use `CORRESPONDING #( )` instead of field-by-field `MOVE` statements when converting between similar structures.
-- Always double check decimal places (`DECIMALS`) for `p` type fields dealing with currency/quantity to avoid rounding bugs.
-
-## ⚠️ Common Mistakes
-
-- Comparing an ALPHA-converted key (with leading zeros) to a raw user-input value without converting both sides consistently.
-- Using `c` type for numbers that need arithmetic — use `n` only for numeric-looking IDs, never for calculations.
-- Forgetting `CONDENSE` before string comparisons/concatenations, leading to subtle whitespace bugs.
-
-## 🎤 Interview Tips
-
-- Be able to explain the difference between `c`, `n`, `string`, and when to use each.
-- Know what `CORRESPONDING #( )` does and how it differs from `MOVE-CORRESPONDING`.
-- Explain what the `ALPHA` conversion exit does and why it matters for SAP key fields (e.g., material number, document number).
-
-## 🔗 Related Chapters
-
-- [03-Variables](../03-Variables/README.md)
-- [07-Internal-Tables](../07-Internal-Tables/README.md)
-- [Examples/String-Functions.md](../Examples/String-Functions.md)
