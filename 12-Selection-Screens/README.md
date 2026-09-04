@@ -4,7 +4,7 @@
 
 Selection screens gather report input from the user (`PARAMETERS`, `SELECT-OPTIONS`). Dynpros (`SCREEN`) provide fully custom, interactive screens (tabstrips, subscreens, PBO/PAI modules). This chapter also covers popup windows and screen field control.
 
-> **Lifecycle:** `CLASSIC BUT STILL RELEVANT`. Selection screens and dynpros are the standard on-premise report and dialog UI and remain in active use. They are **not** part of the ABAP Cloud development model, where the UI layer is Fiori/UI5 over OData. See [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
+> **Lifecycle:** `CLASSIC BUT STILL RELEVANT`. Selection screens and dynpros are the standard on-premise report and dialog UI and remain in active use. They are **not** part of the ABAP Cloud development model, where the UI layer is Fiori/UI5 over OData. 
 
 ## 🖥️ Selection Screen Elements
 
@@ -72,7 +72,7 @@ SELECTION-SCREEN FUNCTION KEY 1.
 SELECTION-SCREEN FUNCTION KEY 2.
 ```
 
-> ⚠️ **Every parameter and select-option name must be unique in the program.** Two `PARAMETERS p_rad1` declarations — even in different blocks — are a duplicate declaration. Likewise, `SELECT-OPTIONS ... FOR <table>-<field>` needs that table declared with `TABLES`, or a `DATA` work area of the right type.
+
 
 | Element | Purpose |
 |---|---|
@@ -161,13 +161,11 @@ FORM modify_screen.
 ENDFORM.
 ```
 
-> ⚠️ **`LOOP AT SCREEN` / `MODIFY SCREEN` only take effect in `AT SELECTION-SCREEN OUTPUT`.** Placed in `INITIALIZATION` — directly or via a `PERFORM` — they run without error and change nothing, because the screen has not been built yet. This is one of the most frequently reported "my dynamic screen logic doesn't work" problems.
 
 ## 🪟 Custom Screens (Dynpros)
 
 A dynpro has two processing blocks: **PBO** (Process Before Output, runs before the screen is displayed) and **PAI** (Process After Input, runs after the user acts).
-
-> ⚠️ **The flow logic and the ABAP source are two different objects.** `PROCESS BEFORE OUTPUT` / `PROCESS AFTER INPUT` live in the screen's **flow logic**, maintained in the Screen Painter (SE51 / the Screen tab in SE80). They cannot be pasted into a `REPORT` source. The `MODULE ... ENDMODULE` blocks they call **do** live in the ABAP source. The two listings below are shown separately for exactly that reason.
+two listings below are shown separately for exactly that reason.
 
 **Flow logic — maintained in SE51, not in the ABAP source:**
 
@@ -267,9 +265,7 @@ MODULE status_0102 OUTPUT.
   ENDLOOP.
 ENDMODULE.
 ```
-> 💡 `FIELD <field> MODULE <name> ON INPUT` runs a PAI module **only if the field's value has changed** — useful for expensive validations that shouldn't run on every PAI cycle.
 
-> 💡 For a longer list of values, build a range table once and keep the `IN` form:
 > ```abap
 > DATA(lr_display_tcodes) = VALUE rseloption( sign = 'I' option = 'EQ'
 >                                             ( low = 'QM03' ) ( low = 'IW23' ) ).
@@ -299,36 +295,3 @@ CALL FUNCTION 'POPUP_TO_DISPLAY_TEXT'
   EXPORTING textline1 = 'Processing finished'.
 ```
 
-## ✅ Best Practices
-
-- Use `MODIF ID` groups + `LOOP AT SCREEN` for dynamic show/hide logic instead of hardcoding field names repeatedly, and make sure the group name matches on both sides.
-- Put screen modification in `AT SELECTION-SCREEN OUTPUT`, never in `INITIALIZATION`.
-- Keep PBO modules lightweight (avoid DB calls where possible) — they run every time the screen is redrawn.
-- Use `FIELD ... MODULE ... ON INPUT` to avoid re-running expensive checks when a field hasn't changed.
-- Validate individual fields in `AT SELECTION-SCREEN ON <field>` so the error is reported against the right input.
-- Keep flow logic (SE51) and ABAP source mentally separate — they are edited in different places.
-
-## ⚠️ Common Mistakes
-
-- **Putting `LOOP AT SCREEN` in `INITIALIZATION`**, where it silently does nothing.
-- **Pasting `PROCESS BEFORE OUTPUT` / `PROCESS AFTER INPUT` into the ABAP source.** They belong to the screen's flow logic.
-- **Using ABAP SQL's `IN ( a, b )` value list in an ABAP `IF`.** Use `OR`, or a range table.
-- Declaring the same `PARAMETERS`/`SELECT-OPTIONS` name twice.
-- Using a numeric literal as a `RADIOBUTTON GROUP` or `MODIF ID` name instead of an identifier.
-- Forgetting `OBLIGATORY` on mandatory selection fields, letting users submit incomplete input.
-- Overusing hardcoded literal screen/field names — makes maintenance and Screen Painter changes brittle.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the PBO/PAI cycle and when each module type runs.
-- Explain where `LOOP AT SCREEN` has an effect and why `INITIALIZATION` is too early.
-- Be ready to explain the difference between `PARAMETERS` and `SELECT-OPTIONS`, and what a `SELECT-OPTIONS` field expands to (a range table).
-- Explain `MODIF ID` and `LOOP AT SCREEN` dynamic screen control.
-- Explain which parts of a dynpro live in the Screen Painter and which in the ABAP source.
-
-## 🔗 Related Chapters
-
-- [06-Loops](../06-Loops/README.md) — range tables produced by `SELECT-OPTIONS`
-- [01-ABAP-Basics](../01-ABAP-Basics/README.md) — report event order
-- [13-ALV](../13-ALV/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md)
