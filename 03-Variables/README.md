@@ -49,7 +49,6 @@ DATA(lt_data)    = VALUE zsm_tt_value( ( ls_data ) ).
 
 ## 🧵 `FORM` / `PERFORM` (Classical Subroutines)
 
-> **Lifecycle:** `LEGACY / HISTORICAL REFERENCE`. Procedural subroutines are obsolete for new code and are not available in ABAP Cloud — but they are everywhere in existing programs, so reading them is a required skill. Prefer methods for anything you write. See [09-Modularization](../09-Modularization/README.md) and [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
 
 `FORM`/`PERFORM` with `TABLES`/`USING` parameters is still found in many long-lived programs:
 
@@ -98,7 +97,7 @@ INCLUDE zsm_test_top.
 INCLUDE zsm_test_frm.
 ```
 
-> ⚠️ `CALL FUNCTION` expects a **function module name** (a character value, usually a literal or a variable). Writing `CALL FUNCTION cl_some_class=>some_method` is a syntax error. Verify a class method's real signature in SE24 before calling it — see [09-Modularization](../09-Modularization/README.md) for more on choosing between methods and function modules.
+> ⚠️ `CALL FUNCTION` expects a **function module name** (a character value, usually a literal or a variable). Writing `CALL FUNCTION cl_some_class=>some_method` is a syntax error. Verify a class method's real signature in SE24 before calling it 
 
 ## ✍️ Output & Pointers
 
@@ -134,31 +133,3 @@ START-OF-SELECTION.
 
 > ⚠️ **An inline declaration cannot carry a `TYPE` addition.** `DATA(lv_x) TYPE i.` is a syntax error — the whole point of `DATA(...)` is that the type comes from the assignment. If you need to state the type, use the classic form: `DATA lv_x TYPE i.`
 
-## ✅ Best Practices
-
-- Prefer inline declarations (`DATA(...)`) close to first use for readability, but declare variables at the top of the method if they are reused across many statements.
-- Use `CONSTANTS` (or better, custom data elements/domains) instead of "magic numbers"/hardcoded literals scattered through the code.
-- Use `VALUE #( ... OPTIONAL )` instead of `READ TABLE` + `IF sy-subrc = 0` when you just need a safe default value.
-- Type every `FORM`/method parameter. An untyped parameter accepts anything and defers all errors to runtime.
-
-## ⚠️ Common Mistakes
-
-- Declaring the same variable name twice in the same scope (syntax error) — always check existing declarations before adding new ones.
-- Adding `TYPE` to an inline `DATA(...)` declaration.
-- Calling a class method with `CALL FUNCTION`.
-- Supplying `IMPORTING`/`CHANGING` parameters to a functional method call used in an operand position.
-- Using `TABLES` / header-line based parameters in new code — prefer standard internal tables with explicit work areas.
-- Forgetting to `CLEAR` reused work areas between loop iterations when not using `LOOP ... INTO` (which implicitly clears).
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between `DATA`, `CONSTANTS`, and `FIELD-SYMBOLS`.
-- Explain when `#` can be used for a constructor expression's type and when an explicit type is required.
-- Be ready to discuss why modern ABAP favors inline declarations and `VALUE`/`CORRESPONDING` constructors over `MOVE`/explicit `DATA` + `APPEND`.
-- Know what a data reference (`REF #( )`, `TYPE REF TO data`) is and how it differs from an object reference (`TYPE REF TO <class>`).
-
-## 🔗 Related Chapters
-
-- [07-Internal-Tables](../07-Internal-Tables/README.md) — field symbols and data references in depth
-- [09-Modularization](../09-Modularization/README.md) — `FORM`/`PERFORM` vs. methods
-- [10-Objects](../10-Objects/README.md) — object references
