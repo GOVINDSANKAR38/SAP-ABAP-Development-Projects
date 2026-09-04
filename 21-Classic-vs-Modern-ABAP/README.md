@@ -135,26 +135,3 @@ Kept deliberately brief and conservative. This section explains the *shape* of t
 | **Reviewing someone else's code** | All of the above. | Ask whether each classic construct is *deliberate* or *habitual*. | "It's old" is not a review finding. "It's wrong", "it's unsafe", or "it's not the supported interface" are. |
 
 ---
-
-## 6. Scope Boundary
-
-**ABAPGuide is an ABAP engineering reference.** It covers the language, its data access, the classic UI and extensibility technologies, and the modern expression and SQL syntax that came in with the 7.40 generation — as those things are actually used in productive landscapes.
-
-It is **not**:
-
-- a RAP course — behaviour definitions, EML, managed and unmanaged scenarios are not covered;
-- a CDS course — view entities, associations and annotations are not covered;
-- an AMDP or code-pushdown guide;
-- an ABAP Unit or test-driven-development guide;
-- an ABAP Cloud migration handbook — [section 4](#4-what-changes-under-abap-cloud) sets out the boundary and stops there;
-- a substitute for SAP's official documentation. For anything version-sensitive, the [ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/index.htm) is the authority.
-
-Stating this plainly is deliberate. A reference that is honest about its edges is more useful than one that gestures at everything — and the material this guide *does* cover is the material most SAP landscapes are actually built from.
-
-## 🔗 Related Chapters
-
-Every chapter in this guide carries a lifecycle note that points back here:
-
-- [09-Modularization](../09-Modularization/README.md) · [11-Classical-Reports](../11-Classical-Reports/README.md) · [12-Selection-Screens](../12-Selection-Screens/README.md) · [13-ALV](../13-ALV/README.md)
-- [14-Function-Modules](../14-Function-Modules/README.md) · [15-BAPIs](../15-BAPIs/README.md) · [16-BADIs](../16-BADIs/README.md) · [17-Enhancements](../17-Enhancements/README.md)
-- [20-Best-Practices](../20-Best-Practices/README.md) — the review checklist that applies all of this
