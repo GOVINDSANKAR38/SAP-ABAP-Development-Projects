@@ -65,31 +65,6 @@ ENDFORM.
 
 Most of this chapter describes on-premise techniques. In the ABAP Cloud development model the picture narrows sharply: extension happens through **released** extension points — released BAdIs, released APIs and the defined extensibility options — not through modifications, implicit enhancements, or edits to delivered includes. That is the practical meaning of "keep the core clean". The techniques above remain correct and necessary for the on-premise systems that run today; they simply are not the path for a cloud-model extension. See [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
 
-## ✅ Best Practices
-
-- Prefer the **least invasive** technique available: released BAdI > BAdI > enhancement spot/point > customer exit > user exit > modification.
-- Never modify standard SAP objects directly unless no other technique exists — modifications complicate every future upgrade and support package.
-- Prefer **explicit** enhancement spots over implicit enhancement options. Implicit enhancements attach to code SAP never designed as an interface, so they break silently when that code changes.
-- Document every enhancement with a comment referencing the business requirement or ticket.
-- Keep enhancement implementations thin — call out to your own Z classes rather than embedding large blocks of logic in an enhancement include.
-- Keep a register of your enhancements. They are the single easiest thing to lose track of before an upgrade.
-
-## ⚠️ Common Mistakes
-
-- Using a modification where a BAdI or enhancement point would have worked.
-- **Confusing user exits with customer exits** — different mechanisms, different upgrade consequences.
-- Forgetting that a customer exit (`SMOD`/`CMOD`) allows only **one active project** per enhancement, so two teams cannot implement it independently.
-- Relying on implicit enhancement options in code that SAP may restructure at any support package.
-- Not testing the enhanced flow against the *unenhanced* standard flow.
-
-## 🎤 Interview & Review Checkpoints
-
-- Rank the enhancement techniques by upgrade safety and justify the ranking.
-- Explain the difference between a user exit, a customer exit, and a BAdI — precisely.
-- Explain the difference between an explicit and an implicit enhancement, and why the latter is riskier.
-- Explain what `SPAU` and `SPDD` are used for during an upgrade.
-- Explain the relationship between `SMOD` (enhancement) and `CMOD` (project).
-- Explain what changes about all of this under ABAP Cloud.
 
 ## 🖥️ Related Transaction Codes
 
@@ -101,8 +76,4 @@ Most of this chapter describes on-premise techniques. In the ABAP Cloud developm
 | SE80 | Enhancement spots and enhancement implementations |
 | SPAU / SPDD | Adjust modifications (repository / Dictionary) during an upgrade |
 
-## 🔗 Related Chapters
 
-- [16-BADIs](../16-BADIs/README.md)
-- [10-Objects](../10-Objects/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md)
