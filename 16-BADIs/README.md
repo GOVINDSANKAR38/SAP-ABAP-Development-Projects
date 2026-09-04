@@ -2,7 +2,7 @@
 
 ## 📖 Introduction
 
-> **Lifecycle:** `CURRENT / RECOMMENDED` as an enhancement technique. BAdIs are the preferred way to extend standard SAP behaviour on-premise, and released BAdIs remain the supported extension point under ABAP Cloud. The **classic** BAdI mechanism (SE18/SE19 adapter classes) is `CLASSIC BUT STILL RELEVANT` — you will maintain plenty of it. See [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
+> **Lifecycle:** `CURRENT / RECOMMENDED` as an enhancement technique. BAdIs are the preferred way to extend standard SAP behaviour on-premise, and released BAdIs remain the supported extension point under ABAP Cloud. The **classic** BAdI mechanism (SE18/SE19 adapter classes) is `CLASSIC BUT STILL RELEVANT` — you will maintain plenty of it.=
 
 A **BAdI** is SAP's object-oriented enhancement technique for injecting custom logic into standard SAP processes without modifying standard code. Unlike classic exits, BAdIs are interface-based and can support multiple, filter-dependent implementations.
 
@@ -42,9 +42,9 @@ METHOD if_ex_me_process_po_cust~process_item.
 ENDMETHOD.
 ```
 
-> ⚠️ **The get / modify / `set_data( )` cycle is the whole pattern.** `get_data( )` hands you a copy of the item's data. Without the closing `set_data( )` call the BAdI runs, does its work, and silently changes nothing — a defect that passes code review easily because the business logic above it looks correct.
+=
 
-> 📝 **NEEDS OFFICIAL VERIFICATION** — check the exact signature of `get_previous_data( )` and the exception it raises in SE24 (`IF_PURCHASE_ORDER_ITEM_MM`) for your release before copying this pattern.
+=
 
 ## 🧠 How This BAdI Implementation Works
 
@@ -97,29 +97,6 @@ TRY.
 ENDTRY.
 ```
 
-## ✅ Best Practices
-
-- Always check whether the current context justifies your logic (as in the example: `bsart = 'NB'` and "only for new items"). BAdIs run for **every** call of the enhancement point, so guard your logic carefully to avoid side effects on unrelated document types.
-- **Write your changes back** with the interface's setter (`set_data( )` and friends). Getters return copies.
-- Keep BAdI implementations thin — delegate to a well-tested class/method rather than embedding complex logic in the implementation.
-- Use constants rather than magic values for document types, tolerances and flags.
-- Document *why* a BAdI was implemented (business requirement, ticket) in the implementing class — BAdIs are easy to lose track of during upgrades.
-
-## ⚠️ Common Mistakes
-
-- **Modifying a local copy and never calling the setter** — the implementation appears correct and does nothing.
-- Forgetting to handle the case where `get_previous_data( )` finds no previous version (new item), causing an unhandled exception.
-- Implementing overly broad logic that fires for all document types when only one case should be affected.
-- Conflating "classic vs. new BAdI" with "single-use vs. multiple-use" — they are independent properties.
-- Not testing with **both** create and change scenarios, since previous-data handling differs between them.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between a **BAdI**, a **customer exit** and a **classic user exit** (see [17-Enhancements](../17-Enhancements/README.md)).
-- Explain the difference between the classic and new BAdI mechanisms, and separately between single-use and multiple-use.
-- Explain what a fallback class is and when it applies.
-- Walk through the get / modify / set cycle and say what happens if the set is missing.
-- Know the transactions to define (SE18) and implement (SE19) a BAdI.
 
 ## 🖥️ Related Transaction Codes
 
@@ -130,8 +107,3 @@ ENDTRY.
 | SE80 | Enhancement spots and enhancement implementations |
 | SPRO | Customizing activation for some BAdIs |
 
-## 🔗 Related Chapters
-
-- [10-Objects](../10-Objects/README.md) — interfaces and OOP concepts used by BAdIs
-- [17-Enhancements](../17-Enhancements/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md)
