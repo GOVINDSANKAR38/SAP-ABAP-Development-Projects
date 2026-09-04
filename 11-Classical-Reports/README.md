@@ -2,10 +2,8 @@
 
 ## 📖 Introduction
 
-> **Lifecycle:** `CLASSIC BUT STILL RELEVANT`. `WRITE`-based list processing remains widespread for background jobs, spool output and quick internal tools, and the report event model underpins every classical program you will maintain. It is **not** part of the ABAP Cloud development model — see [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
-
-A **classical report** (list processing) uses `WRITE` statements and system-defined list events (`TOP-OF-PAGE`, `END-OF-PAGE`) instead of a GUI container like ALV Grid. While most new development uses ALV or Fiori/UI5, classical reports are still common for quick internal tools, background jobs, and simple audits — and the underlying **event model** (`INITIALIZATION` → `START-OF-SELECTION` → `END-OF-SELECTION`) is foundational knowledge covered in [01-ABAP-Basics](../01-ABAP-Basics/README.md).
-
+> **Lifecycle:** `CLASSIC BUT STILL RELEVANT`. `WRITE`-based list processing remains widespread for background jobs, spool output and quick internal tools, and the report event model underpins every classical program you will maintain. It is **not** part of the ABAP Cloud development model 
+A **classical report** (list processing) uses `WRITE` statements and system-defined list events (`TOP-OF-PAGE`, `END-OF-PAGE`) instead of a GUI container like ALV Grid. While most new development uses ALV or Fiori/UI5, classical reports are still common for quick internal tools, background jobs, and simple audits 
 ## 🧾 Classical List Events
 
 | Event | Purpose |
@@ -114,37 +112,7 @@ START-OF-SELECTION.
     INTO TABLE <fs_table>.
 ```
 
-> ⚠️ **A successful Dictionary lookup proves that the table exists — it proves nothing about whether this user may read it.** A dynamic `SELECT` performs **no** implicit authorization check, so a generic table viewer without one is a complete bypass of SAP's table authorization model: any table the program can name, it can read.
->
-> `VIEW_AUTHORITY_CHECK` is the standard function module SAP uses for exactly this purpose (generic table/view access in extended table maintenance). Call it with the display activity before the dynamic `SELECT`, and treat a non-zero `sy-subrc` as a hard stop — never as a warning. **NEEDS OFFICIAL VERIFICATION** of the full parameter list against `SE37` in your target release before productive use.
 
-> 💡 This pattern (dynamic field catalog + `cl_alv_table_create=>create_dynamic_table`) is the classic basis for generic "table viewer" utilities and pairs naturally with [13-ALV](../13-ALV/README.md) to display the result.
->
-> **Lifecycle:** `CLASSIC BUT STILL RELEVANT` — dynamic Dictionary access of this kind is restricted under ABAP Cloud. See [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
 
-## ✅ Best Practices
 
-- Use classical `WRITE`-based reports only for simple, short-lived tools — prefer ALV ([13-ALV](../13-ALV/README.md)) for anything user-facing or long-term.
-- Keep `TOP-OF-PAGE` logic lightweight; avoid database access there since it runs once per page, not once per report.
-- When building dynamic tables, always check `sy-subrc` after `cl_alv_table_create=>create_dynamic_table` before using the resulting field symbol.
-- **Always authorization-check generic table access** with `VIEW_AUTHORITY_CHECK` before a dynamic `SELECT`, in addition to validating the name.
 
-## ⚠️ Common Mistakes
-
-- Forgetting `ULINE`/spacing conventions, making classical list output hard to read.
-- Using dynamic tables / dynamic `SELECT (table)` with unvalidated user input — validate the name against the Dictionary first.
-- **Validating existence and calling it security.** Existence and authorization are two different checks; a generic reader needs both.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between a classical list (`WRITE`) and ALV, and when each is appropriate.
-- Be ready to explain how to dynamically create an internal table at runtime and why this is useful for generic tools.
-- Explain why a dynamic `SELECT` needs an explicit authorization check, and which check you would use.
-
-## 🔗 Related Chapters
-
-- [01-ABAP-Basics](../01-ABAP-Basics/README.md)
-- [08-Open-SQL](../08-Open-SQL/README.md#-dynamic-sql) — dynamic SQL risks
-- [12-Selection-Screens](../12-Selection-Screens/README.md)
-- [13-ALV](../13-ALV/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md)
