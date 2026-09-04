@@ -4,13 +4,8 @@
 
 ALV is the standard SAP grid control for displaying tabular data with sorting, filtering, totals, and export capabilities built in. There are three common ways to build an ALV report, from simplest to most flexible:
 
-| Approach | Class/FM | Complexity | Flexibility | Lifecycle |
-|---|---|---|---|---|
-| **SALV** (simple API) | `cl_salv_table` | ⭐ Low | ⭐⭐ Medium | `CURRENT / RECOMMENDED` for display-oriented reports |
-| **Function-module based** | `REUSE_ALV_GRID_DISPLAY` | ⭐⭐ Medium | ⭐⭐⭐ High (classic events) | `CLASSIC BUT STILL RELEVANT` — very widespread; not for new code |
-| **OOP ALV Grid** | `cl_gui_alv_grid` | ⭐⭐⭐ High | ⭐⭐⭐⭐ Highest (full event handling, editable grids) | `CLASSIC BUT STILL RELEVANT` — still the only on-premise option for editable, event-rich grids |
 
-> **All three are SAP GUI technologies** and are outside the ABAP Cloud development model, where the UI layer is Fiori/UI5 over OData. That does not make them obsolete — it makes them on-premise technologies. All three are kept in this chapter deliberately. See [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md).
+> **All three are SAP GUI technologies** and are outside the ABAP Cloud development model, where the UI layer is Fiori/UI5 over OData. That does not make them obsolete — it makes them on-premise technologies. All three are kept in this chapter deliberately. 
 
 ## 🟢 Option 1 — `cl_salv_table` (Simple ALV / SALV)
 
@@ -109,7 +104,7 @@ ENDCLASS.
 
 The classic function-module approach, still very common in existing systems, offering full control over field catalog, layout, sort, filter, and events via callback forms.
 
-> ⚠️ **SLIS and LVC are two different type families and they are not interchangeable.**
+
 > `REUSE_ALV_*` uses the **SLIS** types (`slis_t_fieldcat_alv`, `slis_layout_alv`, `slis_t_sortinfo_alv`, …).
 > `cl_gui_alv_grid` uses the **LVC** types (`lvc_t_fcat`, `lvc_s_layo`, `lvc_t_sort`, …).
 > Mixing them is one of the most common compile errors in ALV code. This section uses SLIS throughout; [Option 3](#-option-3--oop-alv-grid-cl_gui_alv_grid--full-interactive-control) uses LVC throughout.
@@ -800,7 +795,6 @@ CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
   CHANGING  ct_fieldcat        = gt_field_catalog.
 ```
 
-> **Lifecycle:** the macros above are `LEGACY / HISTORICAL REFERENCE`. They are shown because you will find exactly this pattern in existing ALV reports, and reading it is a real skill. For new code prefer a small private method per adjustment — macros bypass type checking and cannot be debugged line by line. See [09-Modularization](../09-Modularization/README.md#-macros-define--end-of-definition).
 
 ## 🎛️ Layout — LVC vs. SLIS
 
@@ -841,47 +835,4 @@ lt_toolbar_ex = VALUE #( ( cl_gui_alv_grid=>mc_fc_refresh )
                          ( cl_gui_alv_grid=>mc_fc_loc_insert_row ) ).
 ```
 
-## ✅ Best Practices
 
-- Use `cl_salv_table` for straightforward display-only reports — much less boilerplate than the classic function-module or OOP grid approaches.
-- Use `cl_gui_alv_grid` when you need editable cells, custom toolbar buttons, hotspots, or fine-grained event handling.
-- **Keep the SLIS and LVC type families apart.** `REUSE_ALV_*` takes `slis_*`; `cl_gui_alv_grid` takes `lvc_*`.
-- Always generate the field catalog from the DDIC structure (`LVC_FIELDCATALOG_MERGE` / `REUSE_ALV_FIELDCATALOG_MERGE`) when possible, then tweak only the fields that need customization.
-- Use `refresh_table_display( is_stable = VALUE lvc_s_stbl( row = abap_true col = abap_true ) )` after modifying displayed data to keep scroll position and selection stable.
-- **Delete selected rows in descending index order**, or the indexes shift under you.
-- Register event handlers consistently: instance handlers with `SET HANDLER obj->handler`, static handlers with `SET HANDLER class=>handler`.
-
-## ⚠️ Common Mistakes
-
-- Forgetting to register edit events (`register_edit_event`) before expecting `data_changed`/`data_changed_finished` events to fire on an editable grid.
-- Mixing `lvc_*` and `slis_*` types between the two ALV families.
-- **Registering a static handler with an instance reference** (`SET HANDLER go_main->static_method`) — this does not compile.
-- **Deleting multiple selected rows by ascending index**, which removes the wrong rows after the first deletion.
-- Comparing a structure (`es_col_id`) to a literal instead of its `-fieldname` component.
-- Calling `lo_alv->display( )` outside the `TRY` that created the object — if the factory raised, the reference is initial.
-- Setting contradictory layout options (`no_rowmark` together with `sel_mode = 'A'`, or `no_toolbar` in a grid that adds toolbar buttons).
-- Not handling `sy-subrc` after `set_table_for_first_display`.
-- Using color codes (`C310`, `C610`, …) without a documented legend.
-
-## 🎤 Interview & Review Checkpoints
-
-- Explain the difference between `cl_salv_table`, `REUSE_ALV_GRID_DISPLAY`, and `cl_gui_alv_grid`, and when to use each.
-- Explain the difference between the LVC and SLIS type families and why they cannot be mixed.
-- Be ready to explain how to make an ALV Grid cell editable and how to react to data changes (`data_changed` / `data_changed_finished`).
-- Explain what a field catalog is and how `LVC_FIELDCATALOG_MERGE` helps generate one automatically.
-- Explain why multi-row deletion must run in descending index order.
-
-## 🖥️ Related Transaction Codes
-
-| T-Code | Purpose |
-|---|---|
-| SE38 / SE80 | Create/test ALV report programs |
-| SE51 | Screen Painter — the dynpro and custom container that host the grid |
-| SLG1 | Application log (for logging ALV data issues) |
-
-## 🔗 Related Chapters
-
-- [11-Classical-Reports](../11-Classical-Reports/README.md) — dynamic field catalogs/tables
-- [07-Internal-Tables](../07-Internal-Tables/README.md)
-- [10-Objects](../10-Objects/README.md)
-- [21-Classic-vs-Modern-ABAP](../21-Classic-vs-Modern-ABAP/README.md) — where the three ALV generations sit
