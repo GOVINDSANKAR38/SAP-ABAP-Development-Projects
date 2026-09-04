@@ -57,25 +57,3 @@ DATA(lo_random) = cl_abap_random_int=>create( seed = cl_abap_random=>seed( )
                                               max  = 100 ).
 DATA(lv_random_number) = lo_random->get_next( ).
 ```
-
-## ✅ Best Practices
-
-- Use built-in functions (`abs`, `ceil`, `floor`, `trunc`) instead of manual arithmetic tricks — they are more readable and self-documenting.
-- Be explicit about **rounding vs. truncation** — `DECIMALS` on a `p` field rounds, `floor()`/`trunc()` truncates. Choose deliberately, especially for financial calculations.
-- Use `MOD` for divisibility checks instead of `/` and comparing to an integer cast.
-
-## ⚠️ Common Mistakes
-
-- Assuming `floor()` and rounding to N decimals with a `p` field behave the same way — they don't.
-- Using literal string values like `'7.15'` inconsistently with numeric literals — ABAP will implicitly convert, but explicit `CONV` is clearer.
-- Ignoring `sy-subrc`/overflow exceptions in more complex calculations (e.g., with `CEIL`/`FLOOR` on very large packed numbers).
-
-## 🎤 Interview Tips
-
-- Know the difference between `ceil`, `floor`, `trunc`, and rounding via `DECIMALS`.
-- Be able to explain how `MOD` works with negative numbers in ABAP.
-
-## 🔗 Related Chapters
-
-- [02-Data-Types](../02-Data-Types/README.md) — packed number (`p`) type and decimals
-- [05-Control-Statements](../05-Control-Statements/README.md) — using calculated values in conditions
